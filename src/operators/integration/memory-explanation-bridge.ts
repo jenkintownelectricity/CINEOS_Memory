@@ -62,4 +62,38 @@ export const MEMORY_EXPLANATION_OPERATORS = [
 ] as const;
 
 /** Bridge integration status. */
-export const BRIDGE_STATUS = 'IMPLEMENTED' as const;
+export const BRIDGE_STATUS = 'HARDENED' as const;
+
+// ---------------------------------------------------------------------------
+// Hardened Loop Support (L04R Phase 2)
+// ---------------------------------------------------------------------------
+
+/** Preset ID for the commit-to-memory explanation loop. */
+export const MEMORY_EXPLANATION_PRESET_ID = 'commit-to-memory-explanation';
+
+/** Loop proof result from executing the hardened preset. */
+export interface MemoryLoopProofResult {
+  loop_id: 'loop-2-commit-to-memory';
+  status: 'PASS' | 'PARTIAL' | 'FAIL';
+  nodes_executed: number;
+  nodes_succeeded: number;
+  memory_lens_opened: boolean;
+  commit_graph_returned: boolean;
+  trace_recorded: boolean;
+  data_source: 'seeded_demo' | 'deterministic' | 'integrated';
+}
+
+/**
+ * Build the expected proof chain for Loop 2.
+ */
+export function getExpectedLoopProofChain(): Array<{ operator_id: string; operator_class: string }> {
+  return [
+    { operator_id: 'load_commit', operator_class: 'input' },
+    { operator_id: 'summarize_memory_chain', operator_class: 'analysis' },
+    { operator_id: 'inspect_worker_trace', operator_class: 'analysis' },
+    { operator_id: 'build_memory_summary_card', operator_class: 'transformation' },
+    { operator_id: 'open_in_memory_lens', operator_class: 'graph_bridge' },
+    { operator_id: 'open_in_commit_graph', operator_class: 'graph_bridge' },
+    { operator_id: 'record_execution_trace', operator_class: 'system' },
+  ];
+}
